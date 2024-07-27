@@ -26,7 +26,7 @@ func DeployGo(builPath string) {
 	if err != nil {
 		if !runtime.IsExitCode(3, err) {
 			log.Fatalf("[Error] :%v", err.Error())
-		} 
+		}
 	}
 
 	cmd := exec.Command("n", BuildConfig.Requirements.Version)
@@ -51,5 +51,6 @@ func DeployGo(builPath string) {
 	if err != nil {
 		log.Fatalf("Error:%v", err)
 	}
+	runner.SetEnv(BuildConfig.GetEnv())
 	runner.Run()
 }

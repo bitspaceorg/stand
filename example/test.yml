@@ -11,5 +11,7 @@ build:
 run:
   - name: start_api
     cmd: npm run start
-ports:
-  expose: 3000
+env:
+  - name: HTTP_PORT
+    value: 3000
+
