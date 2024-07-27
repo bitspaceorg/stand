@@ -12,6 +12,11 @@ type Env struct {
 	Value string `yaml:"value" json:"value"`
 }
 
+type Env struct {
+	Name  string `yaml:"name"`
+	Value string `yaml:"value"`
+}
+
 // default grammar for python build file
 type PythonBuildConfig struct {
 	Project struct {
