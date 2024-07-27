@@ -3,7 +3,6 @@ package deploy
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -36,7 +35,6 @@ func DeployGo(builPath string, cb DeployCallback) {
 
 	cmdi := exec.Command("n", "i", BuildConfig.Requirements.Version)
 	if err := cmdi.Run(); err != nil {
-		log.Println(err)
 		cb("Could not install node version", false)
 		return
 	}
