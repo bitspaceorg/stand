@@ -1,6 +1,6 @@
 project:
   name: test
-  home: /tmp/test/
+  home: /home/suryaprakash/Dev/Go/STAND/example/example-project
   log: /tmp/testLog/
 requirements:
   language: node 
