@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/bitspaceorg/STAND-FOSSHACK/gui"
-	"github.com/bitspaceorg/STAND-FOSSHACK/user"
 	"os"
+
+	"github.com/bitspaceorg/STAND-FOSSHACK/gui"
+	"github.com/bitspaceorg/STAND-FOSSHACK/internal/api"
+	"github.com/bitspaceorg/STAND-FOSSHACK/user"
 )
 
 func main() {
@@ -27,6 +29,7 @@ func main() {
 			// 2. Initialize GUI
 			gui.Init()
 			// 3. Invoke metrics API
+			api.Init()
 			// 4. Start process?
 		}
 	default:
