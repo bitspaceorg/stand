@@ -7,9 +7,9 @@ import (
 	"os/exec"
 	"strings"
 
-	parser "github.com/bitspaceorg/STAND/internal/build-parser"
-	"github.com/bitspaceorg/STAND/internal/runnable"
-	"github.com/bitspaceorg/STAND/internal/runtime"
+	parser "github.com/bitspaceorg/STAND-FOSSHACK/internal/build-parser"
+	"github.com/bitspaceorg/STAND-FOSSHACK/internal/runnable"
+	"github.com/bitspaceorg/STAND-FOSSHACK/internal/runtime"
 )
 
 func DeployGo(builPath string) {
@@ -26,7 +26,7 @@ func DeployGo(builPath string) {
 	if err != nil {
 		if !runtime.IsExitCode(3, err) {
 			log.Fatalf("[Error] :%v", err.Error())
-		} 
+		}
 	}
 
 	cmd := exec.Command("n", BuildConfig.Requirements.Version)
