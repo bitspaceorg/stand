@@ -11,10 +11,15 @@ var ShadowFolder string = fmt.Sprintf("%v/.stand", os.Getenv("HOME"))
 
 const ShadowAuthFile string = "/auth"
 const ShadowGUIFile string = "/gui"
+const ShadowReposFile string = "/repos"
 const GUIFetchLink string = "https://github.com/bitspaceorg/STAND-FRONTEND-FOSSHACK"
 
 func GetShadowAuthFilePath() string {
 	return fmt.Sprintf("%v%v", ShadowFolder, ShadowAuthFile)
+}
+
+func GetShadowReposFilePath() string {
+	return fmt.Sprintf("%v%v", ShadowFolder, ShadowReposFile)
 }
 
 func GetShadowGUIFilePath() string {
