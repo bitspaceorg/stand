@@ -2,3 +2,4 @@ bin/*
 *.env
 node_modules/
 node_install.sh
+go.sum

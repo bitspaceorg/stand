@@ -1,6 +1,6 @@
 package main
 
-import "github.com/bitspaceorg/STAND/internal/deploy"
+import "github.com/bitspaceorg/STAND-FOSSHACK/internal/deploy"
 
 func main() {
 	go deploy.DeployGo("./example/test.yml")
