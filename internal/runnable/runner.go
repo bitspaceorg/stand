@@ -47,8 +47,8 @@ func (s *StandRunner) Env() []string {
 	return s.cmd.Env
 }
 
-func (s *StandRunner) SetEnv(vars ...string) {
-	s.cmd.Env = append(s.cmd.Env, vars...)
+func (s *StandRunner) SetEnv(vars []string) {
+	s.cmd.Env = append(os.Environ(), vars...)
 }
 
 // Clean up Function

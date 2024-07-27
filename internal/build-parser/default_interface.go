@@ -1,8 +1,15 @@
 package parser
 
+import "fmt"
+
 type Command struct {
 	Name string `yaml:"name"`
 	Cmd  string `yaml:"cmd"`
+}
+
+type Env struct {
+	Name  string `yaml:"name"`
+	Value string `yaml:"value"`
 }
 
 // default grammar for python build file
@@ -19,9 +26,7 @@ type PythonBuildConfig struct {
 
 	Run []Command `yaml:"run"`
 
-	Ports struct {
-		Expose string `yaml:"expose"`
-	} `yaml:"ports"`
+	Envs []Env `yaml:"env"`
 }
 
 // default grammar for python build file
@@ -39,7 +44,14 @@ type NodeBuildConfig struct {
 
 	Run []Command `yaml:"run"`
 
-	Ports struct {
-		Expose string `yaml:"expose"`
-	} `yaml:"ports"`
+	Envs []Env `yaml:"env"`
+}
+
+func (c *NodeBuildConfig) GetEnv() []string {
+	envs := []string{}
+	for _, v := range c.Envs {
+		envs = append(envs, fmt.Sprintf("%v=%v", v.Name, v.Value))
+	}
+
+	return envs
 }

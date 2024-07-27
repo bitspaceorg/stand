@@ -2,7 +2,7 @@ package deploy
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -12,12 +12,14 @@ import (
 	"github.com/bitspaceorg/STAND-FOSSHACK/internal/runtime"
 )
 
-func DeployGo(builPath string) {
+type DeployCallback func(message string, status bool)
+
+func DeployGo(builPath string, cb DeployCallback) {
 	var BuildConfig parser.NodeBuildConfig
 	parser := parser.NewBuildFileParser(builPath)
 	parser.Parse(&BuildConfig)
 	if BuildConfig.Requirements.Language != "node" {
-		log.Fatalf("Its not node!")
+		cb("Only Node is supported", false)
 	}
 	r := runtime.NodeRuntimeInstaller{
 		Home: BuildConfig.Project.Home, Version: BuildConfig.Requirements.Version,
@@ -25,13 +27,13 @@ func DeployGo(builPath string) {
 	err := r.Install()
 	if err != nil {
 		if !runtime.IsExitCode(3, err) {
-			log.Fatalf("[Error] :%v", err.Error())
+			cb(fmt.Sprintf("[Error] :%v", err.Error()), false)
 		}
 	}
 
 	cmd := exec.Command("n", BuildConfig.Requirements.Version)
 	if err := cmd.Run(); err != nil {
-		log.Fatalf("Could not switch version")
+		cb("Could not change node version", false)
 	}
 
 	for _, rawCmd := range BuildConfig.Build {
@@ -41,7 +43,7 @@ func DeployGo(builPath string) {
 		buildCmd.Stdout = os.Stdout
 		buildCmd.Stderr = os.Stderr
 		if err := buildCmd.Run(); err != nil {
-			log.Fatalf("Error in %v", rawCmd.Name)
+			cb(fmt.Sprintf("[Error] :%v", rawCmd.Name), false)
 		}
 	}
 
@@ -49,7 +51,9 @@ func DeployGo(builPath string) {
 
 	runner, err := runnable.NewStandRunner(context.Background(), cfg)
 	if err != nil {
-		log.Fatalf("Error:%v", err)
+		cb(fmt.Sprintf("[Error] :%v", err.Error()), false)
 	}
+	runner.SetEnv(BuildConfig.GetEnv())
+	cb("Build Successful", true)
 	runner.Run()
 }
