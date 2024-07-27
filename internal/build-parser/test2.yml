@@ -1,7 +1,7 @@
 project:
   name: test
   home: /tmp/test/
-  log: /tmp/testLog/
+  log: /tmp/testLog2/
 requirements:
   language: node 
   version: 20
@@ -10,6 +10,6 @@ build:
     cmd: npm install
 run:
   - name: start_api
-    cmd: npm run start
+    cmd: npm run start2
 ports:
   expose: 3000

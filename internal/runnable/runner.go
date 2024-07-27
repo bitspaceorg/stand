@@ -2,6 +2,7 @@ package runnable
 
 import (
 	"context"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -11,6 +12,7 @@ import (
 // Implements the Runnable interface
 type StandRunner struct {
 	cmd     *exec.Cmd
+	pty     *os.File
 	logFile *lumberjack.Logger
 }
 
@@ -33,6 +35,7 @@ func NewStandRunner(ctx context.Context, cfg *StandConfig) (*StandRunner, error)
 
 	cmd.Stdout = logger
 	cmd.Stderr = logger
+	cmd.Dir = cfg.HomeDir
 
 	return &StandRunner{
 		cmd:     cmd,

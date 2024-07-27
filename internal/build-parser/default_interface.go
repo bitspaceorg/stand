@@ -27,8 +27,9 @@ type PythonBuildConfig struct {
 // default grammar for python build file
 type NodeBuildConfig struct {
 	Project struct {
-		Name string `yaml:"name"`
-		Home string `yaml:"home"`
+		Name   string `yaml:"name"`
+		Home   string `yaml:"home"`
+		LogDir string `yaml:"log"`
 	}
 	Requirements struct {
 		Language string `yaml:"language"`
@@ -42,4 +43,3 @@ type NodeBuildConfig struct {
 		Expose string `yaml:"expose"`
 	} `yaml:"ports"`
 }
-

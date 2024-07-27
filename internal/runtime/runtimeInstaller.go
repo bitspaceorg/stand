@@ -3,6 +3,7 @@ package runtime
 import (
 	"errors"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -29,6 +30,11 @@ type NodeRuntimeInstaller struct {
 func (i *NodeRuntimeInstaller) runCommand(cmdString string) error {
 	cmds := strings.Split(cmdString, " ")
 	cmd := exec.Command(cmds[0], cmds[1:]...)
+	cmd.Dir = i.Home
+
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+
 	err := cmd.Run()
 	if err != nil {
 		return err
@@ -55,33 +61,20 @@ func (i *NodeRuntimeInstaller) Install() error {
 	if err != nil {
 		return err
 	}
-	switch i.fetcher {
-	case "curl":
-		err = i.runCommand("curl -o nvm.sh https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh")
-		if err != nil {
-			return errors.New("Could not access curl!")
-		}
-	case "wget":
-		err = i.runCommand("wget -o https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh")
-		if err != nil {
-			log.Println(err)
-			return errors.New("Could not access wget!")
-		}
+	err = i.runCommand(i.fetcher + " -L -o node_install.sh https://bit.ly/n-install")
+	if err != nil {
+		log.Printf("Fetcher error: %v", err.Error())
+		return errors.New("Could not access " + i.fetcher)
 	}
 
-	commands := []Installstep{
-		{cmd: []string{"chmod", "+x", "nvm.sh"}, err: "Could not change permission to execute"},
-		{cmd: []string{"/bin/bash", "nvm.sh"}, err: "Could not run the instal script"},
-		{cmd: []string{"sh", "-c", `[ -s "$HOME/.nvm/nvm.sh" ] && \. "$HOME/.nvm/nvm.sh" && nvm install ` + i.Version}, err: "Could not change permission to execute"},
-		{cmd: []string{"sh", "-c", `[ -s "$HOME/.nvm/nvm.sh" ] && \. "$HOME/.nvm/nvm.sh" && nvm use ` + i.Version + ` && node --version`}, err: "Could not change permission to execute "},
+	err = i.runCommand("chmod +x node_install.sh")
+	if err != nil {
+		return errors.New("could not give permission")
 	}
-	for _, cmd := range commands {
-		cmdR := exec.Command(cmd.cmd[0], cmd.cmd[1:]...)
-		buf, err := cmdR.CombinedOutput()
-		if err != nil {
-			log.Println(cmd.err + err.Error())
-		}
-		log.Println("this is a output", string(buf))
+	err = i.runCommand("bash node_install.sh -y")
+	if err != nil {
+		log.Println(err)
+		return errors.New("Error could not install !")
 	}
 	return nil
 }
