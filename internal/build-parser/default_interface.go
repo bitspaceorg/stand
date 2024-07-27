@@ -5,14 +5,6 @@ import "fmt"
 type Command struct {
 	Name string `yaml:"name" json:"name"`
 	Cmd  string `yaml:"cmd" json:"cmd"`
-<<<<<<< HEAD
-}
-
-type Env struct {
-	Name  string `yaml:"name" json:"name"`
-	Value string `yaml:"value" json:"value"`
-=======
->>>>>>> 3fab022 ([Add] rest handler new project 🚧)
 }
 
 type Env struct {
