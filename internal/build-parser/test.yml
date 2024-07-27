@@ -2,15 +2,13 @@ project:
   name: test
   home: /home/test/
 requirements:
-  language: python
-  version: 3.10
+  language: node 
+  version: 20
 build:
   - name: install_dependencies
-    cmd: pip install -r requirements
-  - name: do_lint
-    cmd: pip lint
+    cmd: npm install
 run:
   - name: start_api
-    cmd: python main.py
+    cmd: npm run start
 ports:
   expose: 3000

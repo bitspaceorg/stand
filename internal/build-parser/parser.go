@@ -30,7 +30,7 @@ func NewBuildFileParser(filePath string) *BuildFileParser {
 // It tries to prase the given yml|yaml  file
 // into the interface which is passed in
 func (p *BuildFileParser) Parse(data interface{}) error {
-	file, err := os.ReadFile("./internal/build-parser/test.yml")
+	file, err := os.ReadFile(p.filePath)
 	if err != nil {
 		return fmt.Errorf("Error opening the file: %v", err.Error())
 	}
