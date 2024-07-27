@@ -7,10 +7,12 @@ import (
     "log"
 
     "github.com/gofiber/fiber/v2"
+  "github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func StartServer(config config.AppConfig) {
     app := fiber.New()
+    app.Use(cors.New())
 
     rh := rest.RestHandler{
         App: app,
@@ -26,5 +28,6 @@ func StartServer(config config.AppConfig) {
 
 func setupRoutes(rh *rest.RestHandler) {
     handlers.SetupHealthRoutes(rh)
+    handlers.SetupMetricRoutes(rh)
     // handlers.SetupUserRoutes(rh)
 }
