@@ -28,8 +28,8 @@ func (m *metricHandler) metric(c *fiber.Ctx) error {
 		"os":       runtime.GOOS,
 		"cpuCount": runtime.NumCPU(),
 		"memory": fiber.Map{
-			"totalMemory": memStat.Total,
-			"usedMemory":  memStat.Used,
+			"totalMemory": ((memStat.Total / 1024) / 1024) / 1024,
+			"usedMemory":  ((memStat.Used / 1024) / 1024) / 1024,
 		},
 		"disk": fiber.Map{
 			"totalDisk": ((diskStat.Total / 1024) / 1024) / 1024,

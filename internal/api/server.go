@@ -35,6 +35,7 @@ func setupRoutes(rh *rest.RestHandler) {
 	handlers.SetupMetricRoutes(rh)
 	handlers.SetupUserVerificationRoutes(rh)
 	handlers.SetupHealthRoutes(rh)
+	handlers.SetupRepoRoutes(rh)
 	handlers.SetupBuildRoutes(rh)
 	handlers.SetupProjectRoutes(rh)
 	handlers.SetupRepoRoutes(rh)
