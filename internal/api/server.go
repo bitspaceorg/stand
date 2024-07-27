@@ -32,7 +32,7 @@ func StartServer(config config.AppConfig) {
 }
 
 func setupRoutes(rh *rest.RestHandler) {
-	handlers.SetupHealthRoutes(rh)
 	handlers.SetupMetricRoutes(rh)
 	handlers.SetupUserVerificationRoutes(rh)
+	handlers.SetupHealthRoutes(rh)
 }

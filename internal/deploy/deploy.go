@@ -2,7 +2,7 @@ package deploy
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -12,44 +12,48 @@ import (
 	"github.com/bitspaceorg/STAND-FOSSHACK/internal/runtime"
 )
 
-func DeployGo(builPath string) {
-	var BuildConfig parser.NodeBuildConfig
-	parser := parser.NewBuildFileParser(builPath)
-	parser.Parse(&BuildConfig)
-	if BuildConfig.Requirements.Language != "node" {
-		log.Fatalf("Its not node!")
-	}
-	r := runtime.NodeRuntimeInstaller{
-		Home: BuildConfig.Project.Home, Version: BuildConfig.Requirements.Version,
-	}
-	err := r.Install()
-	if err != nil {
-		if !runtime.IsExitCode(3, err) {
-			log.Fatalf("[Error] :%v", err.Error())
-		}
-	}
+type DeployCallback func(message string, status bool)
 
-	cmd := exec.Command("n", BuildConfig.Requirements.Version)
-	if err := cmd.Run(); err != nil {
-		log.Fatalf("Could not switch version")
-	}
+func DeployGo(builPath string, cb DeployCallback) {
+    var BuildConfig parser.NodeBuildConfig
+    parser := parser.NewBuildFileParser(builPath)
+    parser.Parse(&BuildConfig)
+    if BuildConfig.Requirements.Language != "node" {
+        cb("Only Node is supported", false)
+    }
+    r := runtime.NodeRuntimeInstaller{
+        Home: BuildConfig.Project.Home, Version: BuildConfig.Requirements.Version,
+    }
+    err := r.Install()
+    if err != nil {
+        if !runtime.IsExitCode(3, err) {
+            cb(fmt.Sprintf("[Error] :%v", err.Error()), false)
+        }
+    }
 
-	for _, rawCmd := range BuildConfig.Build {
-		cmds := strings.Split(rawCmd.Cmd, " ")
-		buildCmd := exec.Command(cmds[0], cmds[1:]...)
-		buildCmd.Dir = BuildConfig.Project.Home
-		buildCmd.Stdout = os.Stdout
-		buildCmd.Stderr = os.Stderr
-		if err := buildCmd.Run(); err != nil {
-			log.Fatalf("Error in %v", rawCmd.Name)
-		}
-	}
+    cmd := exec.Command("n", BuildConfig.Requirements.Version)
+    if err := cmd.Run(); err != nil {
+        cb("Could not change node version", false)
+    }
 
-	cfg := runnable.NewStandConfig(BuildConfig.Project.Name, BuildConfig.Run[0].Cmd, BuildConfig.Project.Home, BuildConfig.Project.LogDir)
+    for _, rawCmd := range BuildConfig.Build {
+        cmds := strings.Split(rawCmd.Cmd, " ")
+        buildCmd := exec.Command(cmds[0], cmds[1:]...)
+        buildCmd.Dir = BuildConfig.Project.Home
+        buildCmd.Stdout = os.Stdout
+        buildCmd.Stderr = os.Stderr
+        if err := buildCmd.Run(); err != nil {
+            cb(fmt.Sprintf("[Error] :%v", rawCmd.Name), false)
+        }
+    }
 
-	runner, err := runnable.NewStandRunner(context.Background(), cfg)
-	if err != nil {
-		log.Fatalf("Error:%v", err)
-	}
-	runner.Run()
+    cfg := runnable.NewStandConfig(BuildConfig.Project.Name, BuildConfig.Run[0].Cmd, BuildConfig.Project.Home, BuildConfig.Project.LogDir)
+
+    runner, err := runnable.NewStandRunner(context.Background(), cfg)
+    if err != nil {
+        cb(fmt.Sprintf("[Error] :%v", err.Error()), false)
+    }
+    runner.SetEnv(BuildConfig.GetEnv())
+    cb("Build Successful", true)
+    runner.Run()
 }
