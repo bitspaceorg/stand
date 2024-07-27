@@ -21,6 +21,10 @@ func GetShadowGUIFilePath() string {
 	return fmt.Sprintf("%v%v", ShadowFolder, ShadowGUIFile)
 }
 
+func GetShadowGUIBuildPath() string {
+	return fmt.Sprintf("%v%v/out", ShadowFolder, ShadowGUIFile)
+}
+
 func HashPassword(password string) string {
 	hash := sha256.New()
 	hash.Write([]byte(password))

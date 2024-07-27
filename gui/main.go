@@ -26,20 +26,20 @@ func Init() {
 	// Checks if the GUI is already built - if not yarn build it
 	if _, yarnbuilderr := os.Stat(fmt.Sprintf("%v/node_modules", utils.GetShadowGUIFilePath())); os.IsNotExist(yarnbuilderr) {
 		fmt.Println("Building GUI...")
-		yarnBuildCmds := strings.Split(fmt.Sprintf("cd %v && yarn", utils.GetShadowGUIFilePath()), " ")
+		yarnBuildCmds := strings.Split(fmt.Sprintf("cd %v && npm i && export NEXT_PUBLIC_HTTP_PORT=6789 && npm run build", utils.GetShadowGUIFilePath()), " ")
 		yarnBuildExec := exec.Command("sh", "-c", strings.Join(yarnBuildCmds, " "))
 		if err := yarnBuildExec.Run(); err != nil {
 			fmt.Println("Error building GUI:", err)
 			return
 		}
 	}
-	fmt.Println("[Running GUI on port 6789]")
+	// fmt.Println("[Running GUI on port 6789]")
 
-	// Start the GUI on port [6789]
-	yarnCmds := strings.Split(fmt.Sprintf("cd %v && yarn dev", utils.GetShadowGUIFilePath()), " ")
-	yarnExec := exec.Command("sh", "-c", strings.Join(yarnCmds, " "))
-	if err := yarnExec.Run(); err != nil {
-		fmt.Println("Error running GUI:", err)
-		return
-	}
+	// // Start the GUI on port [6789]
+	// yarnCmds := strings.Split(fmt.Sprintf("cd %v && yarn dev", utils.GetShadowGUIFilePath()), " ")
+	// yarnExec := exec.Command("sh", "-c", strings.Join(yarnCmds, " "))
+	// if err := yarnExec.Run(); err != nil {
+	// 	fmt.Println("Error running GUI:", err)
+	// 	return
+	// }
 }
