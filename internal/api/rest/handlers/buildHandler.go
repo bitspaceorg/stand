@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/bitspaceorg/STAND-FOSSHACK/internal/api/rest"
 	"github.com/bitspaceorg/STAND-FOSSHACK/internal/deploy"
@@ -30,8 +31,38 @@ func (b *buildHandler) build(c *fiber.Ctx) error {
 	return c.JSON(msg)
 }
 
+// func SetupBuildRoutes(rh *rest.RestHandler) {
+// 	app := rh.App
+// 	b := buildHandler{}
+// 	app.Get("/build", b.build)
+// =======
+//
+// type buildHandler struct {
+// }
+//
+//
+// func (b *buildHandler) build(c *fiber.Ctx) error {
+//     deploy.DeployGo("/home/t-aswath/projects/STAND-FOSSHACK/example/test.yml",func(message string,success bool){
+//         if success {
+//             c.Status(http.StatusOK).JSON(fiber.Map{
+//                 "status": "ok",
+//                 "message": message,
+//             })
+//         } else {
+//             c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+//                 "status": "error",
+//                 "message": message,
+//             })
+//         }
+//     
+//     });
+//     return c.Status(http.StatusOK).JSON(fiber.Map{
+//         "status": "ok",
+//     })
+// }
+
 func SetupBuildRoutes(rh *rest.RestHandler) {
-	app := rh.App
-	b := buildHandler{}
-	app.Get("/build", b.build)
+    app := rh.App
+    b := buildHandler{}
+    app.Get("/build", b.build)
 }
