@@ -26,7 +26,8 @@ func Init() {
 	// Checks if the GUI is already built - if not yarn build it
 	if _, yarnbuilderr := os.Stat(fmt.Sprintf("%v/node_modules", utils.GetShadowGUIFilePath())); os.IsNotExist(yarnbuilderr) {
 		fmt.Println("Building GUI...")
-		yarnBuildCmds := strings.Split(fmt.Sprintf("cd %v && npm i && npm run build", utils.GetShadowGUIFilePath()), " ")
+		httpPort := os.Getenv("HTTP_PORT")
+		yarnBuildCmds := strings.Split(fmt.Sprintf("cd %v && env NEXT_PUBLIC_HTTP_PORT=%v npm i && npm run build", utils.GetShadowGUIFilePath(), httpPort), " ")
 		yarnBuildExec := exec.Command("sh", "-c", strings.Join(yarnBuildCmds, " "))
 		if err := yarnBuildExec.Run(); err != nil {
 			fmt.Println("Error building GUI:", err)
