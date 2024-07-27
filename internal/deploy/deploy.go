@@ -1,15 +1,15 @@
 package deploy
 
 import (
-    "context"
-    "fmt"
-    "os"
-    "os/exec"
-    "strings"
+	"context"
+	"fmt"
+	"os"
+	"os/exec"
+	"strings"
 
-    parser "github.com/bitspaceorg/STAND-FOSSHACK/internal/build-parser"
-    "github.com/bitspaceorg/STAND-FOSSHACK/internal/runnable"
-    "github.com/bitspaceorg/STAND-FOSSHACK/internal/runtime"
+	parser "github.com/bitspaceorg/STAND-FOSSHACK/internal/build-parser"
+	"github.com/bitspaceorg/STAND-FOSSHACK/internal/runnable"
+	"github.com/bitspaceorg/STAND-FOSSHACK/internal/runtime"
 )
 
 type DeployCallback func(message string, status bool)
