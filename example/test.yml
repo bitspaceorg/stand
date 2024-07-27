@@ -1,0 +1,15 @@
+project:
+  name: test
+  home: /home/suryaprakash/Dev/Go/STAND/example/example-project
+  log: /tmp/testLog/
+requirements:
+  language: node 
+  version: 20
+build:
+  - name: install_dependencies
+    cmd: npm install
+run:
+  - name: start_api
+    cmd: npm run start
+ports:
+  expose: 3000
