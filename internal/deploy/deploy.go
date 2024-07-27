@@ -24,7 +24,9 @@ func DeployGo(builPath string) {
 	}
 	err := r.Install()
 	if err != nil {
-		log.Fatalf("here====%v", err.Error())
+		if !runtime.IsExitCode(3, err) {
+			log.Fatalf("[Error] :%v", err.Error())
+		} 
 	}
 
 	cmd := exec.Command("n", BuildConfig.Requirements.Version)

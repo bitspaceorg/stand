@@ -73,8 +73,7 @@ func (i *NodeRuntimeInstaller) Install() error {
 	}
 	err = i.runCommand("bash node_install.sh -y")
 	if err != nil {
-		log.Println(err)
-		return errors.New("Error could not install !")
+		return err
 	}
 	return nil
 }
