@@ -1,9 +1,9 @@
 project:
   name: test
-  home: /home/suryaprakash/Dev/Go/STAND/example/example-project
+  home: /home/t-aswath/projects/STAND-FOSSHACK/example/example-project
   log: /tmp/testLog/
 requirements:
-  language: node 
+  language: node
   version: 20
 build:
   - name: install_dependencies
