@@ -38,4 +38,5 @@ func setupRoutes(rh *rest.RestHandler) {
 	handlers.SetupRepoRoutes(rh)
 	handlers.SetupBuildRoutes(rh)
 	handlers.SetupProjectRoutes(rh)
+	handlers.SetupRepoRoutes(rh)
 }
