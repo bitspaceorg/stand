@@ -16,7 +16,13 @@ type Installstep struct {
 
 type RuntimeInstaller interface {
 	// installs the runtime of the specific language to the local repository
-	Install()
+	Install() error
+
+	//sets the version of the runtime
+	SetVersion(string)
+
+	//sets the home of the runtime
+	SetHome(string)
 }
 
 type NodeRuntimeInstaller struct {
@@ -76,4 +82,12 @@ func (i *NodeRuntimeInstaller) Install() error {
 		return err
 	}
 	return nil
+}
+
+func (i *NodeRuntimeInstaller) SetVersion(version string) {
+	i.Version = version
+}
+
+func (i *NodeRuntimeInstaller) SetHome(home string) {
+	i.Home = home
 }

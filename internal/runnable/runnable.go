@@ -8,14 +8,13 @@ type Runnable interface {
 	//returns the error
 	Run() error
 
-	//gives the list of all Env
-	//for the process
-	Env() []string
-
 	//takes the variables as the list of arguments
 	//seperated by = , eg. key=value
-	SetEnv(vars ...string) 
+	SetEnv(vars []string) 
 
 	//Calls the clean up logic such as closing the log file
 	Flush() error
+
+	//kills the process
+	Kill() error
 }

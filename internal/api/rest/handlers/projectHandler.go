@@ -9,6 +9,7 @@ import (
 	parser "github.com/bitspaceorg/STAND-FOSSHACK/internal/build-parser"
 	"github.com/bitspaceorg/STAND-FOSSHACK/internal/deploy"
 	"github.com/bitspaceorg/STAND-FOSSHACK/internal/puller"
+	"github.com/bitspaceorg/STAND-FOSSHACK/internal/runtime"
 	"github.com/bitspaceorg/STAND-FOSSHACK/utils"
 	"github.com/gofiber/fiber/v2"
 	"gopkg.in/yaml.v3"
@@ -19,6 +20,12 @@ type projectHandler struct {
 
 func (h *projectHandler) newProject(c *fiber.Ctx) error {
 	var cfg parser.NodeBuildConfig
+
+	runtime := runtime.NodeRuntimeInstaller{}
+
+	deployer :=  deploy.GetInstance(&runtime)
+
+
 	if err := c.BodyParser(&cfg); err != nil {
 		return err
 	}
@@ -27,7 +34,7 @@ func (h *projectHandler) newProject(c *fiber.Ctx) error {
 		return err
 	}
 
-	projectFolder := fmt.Sprintf("%s/%s/", utils.ShadowFolder, cfg.Project.Home)
+	projectFolder := fmt.Sprintf("%s/%s/", utils.ShadowFolder, cfg.Project.Name)
 	buildFile := projectFolder + cfg.Project.Name + ".yml"
 	err = os.MkdirAll(projectFolder, 0755)
 	if err != nil {
@@ -57,7 +64,7 @@ func (h *projectHandler) newProject(c *fiber.Ctx) error {
 
 	msgChan := make(chan MessageStruct)
 	var msg MessageStruct
-	go deploy.DeployGo(buildFile, func(message string, success bool) {
+	go deployer.Deploy(buildFile, func(message string, success bool) {
 		msgChan <- MessageStruct{
 			Message: message,
 			Success: success,

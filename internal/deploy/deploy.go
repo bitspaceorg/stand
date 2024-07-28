@@ -2,10 +2,12 @@ package deploy
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os/exec"
 	"strings"
+	"sync"
 
 	parser "github.com/bitspaceorg/STAND-FOSSHACK/internal/build-parser"
 	"github.com/bitspaceorg/STAND-FOSSHACK/internal/runnable"
@@ -15,21 +17,65 @@ import (
 
 type DeployCallback func(message string, status bool)
 
-func DeployGo(builPath string, cb DeployCallback) {
+type Deployer struct {
+	//interface to install runtime
+	RuntimeInstaller runtime.RuntimeInstaller
+
+	//map to hold the list of all deployments
+	Deploymnets map[string]runnable.Runnable
+}
+
+var instance *Deployer
+var once sync.Once
+
+// GetInstance returns the singleton instance
+func GetInstance(installer runtime.RuntimeInstaller) *Deployer {
+	once.Do(func() {
+		instance = &Deployer{
+			RuntimeInstaller: installer,
+			Deploymnets:      make(map[string]runnable.Runnable),
+		}
+	})
+	return instance
+}
+
+func NewDeployer(installer runtime.RuntimeInstaller) Deployer {
+	return Deployer{
+		RuntimeInstaller: installer,
+		Deploymnets:      make(map[string]runnable.Runnable),
+	}
+}
+
+func (d *Deployer) Kill(name string) error {
+	runner, ok := d.Deploymnets[name]
+	if !ok {
+		log.Println(d.Deploymnets)
+		return errors.New("Process does not exist!")
+	}
+	if err := runner.Kill(); err != nil {
+		log.Println("Here =====>",err)
+		return err
+	}
+	delete(d.Deploymnets, name)
+	return nil
+}
+
+func (d *Deployer) Deploy(builPath string, cb DeployCallback) {
 	var BuildConfig parser.NodeBuildConfig
 	parser := parser.NewBuildFileParser(builPath)
 	parser.Parse(&BuildConfig)
-	projectFolder := fmt.Sprintf("%s/%s/", utils.ShadowFolder, BuildConfig.Project.Home)
+	projectFolder := fmt.Sprintf("%s/%s/", utils.ShadowFolder, BuildConfig.Project.Name)
 	log.Printf("%+v", BuildConfig)
 	if BuildConfig.Requirements.Language != "node" {
 		log.Println("Only node is supported")
 		cb("Only Node is supported", false)
 		return
 	}
-	r := runtime.NodeRuntimeInstaller{
-		Home: projectFolder, Version: BuildConfig.Requirements.Version,
-	}
-	err := r.Install()
+
+	d.RuntimeInstaller.SetHome(projectFolder)
+	d.RuntimeInstaller.SetVersion(BuildConfig.Requirements.Version)
+
+	err := d.RuntimeInstaller.Install()
 	if err != nil {
 		if !runtime.IsExitCode(3, err) {
 			log.Println(fmt.Sprintf("[Error] :%v", err.Error()))
@@ -55,7 +101,7 @@ func DeployGo(builPath string, cb DeployCallback) {
 	for _, rawCmd := range BuildConfig.Build {
 		cmds := strings.Split(rawCmd.Cmd, " ")
 		buildCmd := exec.Command(cmds[0], cmds[1:]...)
-		buildCmd.Dir = projectFolder + "/" + BuildConfig.Project.Name
+		buildCmd.Dir = projectFolder+BuildConfig.Project.Name
 		// buildCmd.Stdout = os.Stdout
 		// buildCmd.Stderr = os.Stderr
 		if buf, err := buildCmd.CombinedOutput(); err != nil {
@@ -76,6 +122,8 @@ func DeployGo(builPath string, cb DeployCallback) {
 	}
 	runner.SetEnv(BuildConfig.GetEnv())
 	log.Println("Build Successful!")
+
+	d.Deploymnets[BuildConfig.Project.Name] = runner
 	cb("Build Successful", true)
 	err = runner.Run()
 	if err != nil {

@@ -2,9 +2,11 @@ package runnable
 
 import (
 	"context"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
+	"syscall"
 
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -19,6 +21,10 @@ type StandRunner struct {
 func NewStandRunner(ctx context.Context, cfg *StandConfig) (*StandRunner, error) {
 	args := strings.Split(cfg.CmdString, " ")
 	cmd := exec.CommandContext(ctx, args[0], args[1:]...)
+
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setpgid: true,
+	}
 
 	err := cfg.CreateDirectories()
 	if err != nil {
@@ -57,6 +63,13 @@ func (s *StandRunner) Flush() error {
 	return nil
 }
 
+// kills the runner
+func (s *StandRunner) Kill() error {
+	defer s.Flush()
+	log.Println("Killed him!")
+
+	return syscall.Kill(-s.cmd.Process.Pid, syscall.SIGKILL)
+}
 func (s *StandRunner) Run() error {
 
 	//clean up logic when the run ends
