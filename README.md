@@ -17,7 +17,7 @@
 
 ## Links
 - [STAND-FRONTEND-FOSSHACK](https://github.com/bitspaceorg/STAND-FRONTEND-FOSSHACK)
-- [STAND-APP)](https://github.com/bitspaceorg/STAND-APP)
+- [STAND-APP](https://github.com/bitspaceorg/STAND-APP)
 
 ## About
 
