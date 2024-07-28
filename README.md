@@ -5,6 +5,7 @@
 
 ## Table of Contents
 
+- [Links](#links)
 - [About](#about)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -14,12 +15,16 @@
 - [Contributing](#contributing)
 - [License](#license)
 
+## Links
+- [STAND-FRONTEND-FOSSHACK](https://github.com/bitspaceorg/STAND-FRONTEND-FOSSHACK)
+- [STAND-APP)](https://github.com/bitspaceorg/STAND-APP)
+
 ## About
 
-STAND (Scalable Technology for Advanced Network Deployment) is a self hosting open source project designed for on-premise servers.
+STAND (Scalable Technology for Advanced Network Deployment) is a self-hosting open-source project designed for on-premise servers.
 It allows users to deploy applications directly from GitHub using a simple and intuitive web UI.
-STAND aims to simplify the process of deploying and managing applications on local servers, providing a scalable and efficient solution.
-All the data required to deploy and host the applications is stored locally, ensuring data privacy and security and most importantly providing the user with full control over their data.
+STAND aims to simplify deploying and managing applications on local servers, providing a scalable and efficient solution.
+All the data required to deploy and host the applications is stored locally, ensuring data privacy and security and providing the user full control over their data.
 
 ## Installation
 
@@ -123,9 +128,9 @@ We welcome contributions from the community! If you would like to contribute to 
 6. Push your changes to your fork
 7. Create a pull request explaining your changes
 
-If possible try to crete an issue before making a pull request so that we can discuss the changes and make sure that they are in line with the project goals.
+If possible try to create an issue before making a pull request so that we can discuss the changes and make sure that they are in line with the project goals.
 Note: Please make sure to follow the code of conduct and the contribution guidelines when contributing to STAND.
 
 ## License
 
-STAND is licensed under the GNU GENERAL PUBLIC LICENSE . See the LICENSE file for more details.
+STAND is licensed under the GNU GENERAL PUBLIC LICENSE. See the LICENSE file for more details.
