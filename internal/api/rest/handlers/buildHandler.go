@@ -1,10 +1,11 @@
 package handlers
 
 import (
+	"log"
+
 	"github.com/bitspaceorg/STAND-FOSSHACK/internal/api/rest"
 	"github.com/bitspaceorg/STAND-FOSSHACK/internal/deploy"
 	"github.com/gofiber/fiber/v2"
-	"log"
 )
 
 type buildHandler struct {

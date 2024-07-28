@@ -1,10 +1,15 @@
 package handlers
 
 import (
+	"fmt"
+	"log"
 	"os"
 
 	"github.com/bitspaceorg/STAND-FOSSHACK/internal/api/rest"
 	parser "github.com/bitspaceorg/STAND-FOSSHACK/internal/build-parser"
+	"github.com/bitspaceorg/STAND-FOSSHACK/internal/deploy"
+	"github.com/bitspaceorg/STAND-FOSSHACK/internal/puller"
+	"github.com/bitspaceorg/STAND-FOSSHACK/utils"
 	"github.com/gofiber/fiber/v2"
 	"gopkg.in/yaml.v3"
 )
@@ -21,11 +26,14 @@ func (h *projectHandler) newProject(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	err = os.Mkdir(cfg.Project.Home+"/", 0755)
+
+	projectFolder := fmt.Sprintf("%s/%s/", utils.ShadowFolder, cfg.Project.Home)
+	buildFile := projectFolder + cfg.Project.Name + ".yml"
+	err = os.MkdirAll(projectFolder, 0755)
 	if err != nil {
 		return err
 	}
-	file, err := os.Create(cfg.Project.Home + "/" + cfg.Project.Name + ".yml")
+	file, err := os.Create(buildFile)
 	if err != nil {
 		return err
 	}
@@ -37,7 +45,29 @@ func (h *projectHandler) newProject(c *fiber.Ctx) error {
 		return err
 	}
 
-	return nil
+	puller := puller.GitPuller{
+		RepoLink: cfg.Project.RepoLink,
+		Path:     projectFolder + cfg.Project.Name,
+	}
+
+	err = puller.Pull()
+	if err != nil {
+		return err
+	}
+
+	msgChan := make(chan MessageStruct)
+	var msg MessageStruct
+	go deploy.DeployGo(buildFile, func(message string, success bool) {
+		msgChan <- MessageStruct{
+			Message: message,
+			Success: success,
+		}
+		close(msgChan)
+	})
+	msg = <-msgChan
+	log.Println(msg)
+	return c.JSON(msg)
+
 }
 
 func SetupProjectRoutes(rh *rest.RestHandler) {

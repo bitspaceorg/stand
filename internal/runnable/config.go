@@ -1,6 +1,7 @@
 package runnable
 
 import (
+	"log"
 	"os"
 )
 
@@ -36,6 +37,7 @@ func (cfg *StandConfig) CreateDirectories() error {
 
 // gives the default config
 func NewStandConfig(ProjectName, CmdString, HomeDir, LogDir string) *StandConfig {
+	log.Println("Runner Created at: ",HomeDir)
 	return &StandConfig{
 		ProjectName: ProjectName,
 		CmdString:   CmdString,

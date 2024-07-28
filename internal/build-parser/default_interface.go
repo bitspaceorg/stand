@@ -35,6 +35,7 @@ type NodeBuildConfig struct {
 		Name   string `yaml:"name" json:"name"`
 		Home   string `yaml:"home" json:"home"`
 		LogDir string `yaml:"log" json:"log"`
+		RepoLink string `yaml:"link" json:"link"` 
 	}
 	Requirements struct {
 		Language string `yaml:"language" json:"language"`
