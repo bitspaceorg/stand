@@ -1,6 +1,7 @@
-# STAND
+<div align=center><h1> STAND</h1>
 
   <img src="https://img.shields.io/badge/:bitspace x fosshack-%23121011?style=for-the-badge&logoColor=%23ffffff&color=%23000000">
+    </div>
 
 ## Table of Contents
 
@@ -92,12 +93,19 @@ This configuration file is generated automatically and does not need to be manua
 ## Techstack
 
 We used GO for its exceptional performance and efficiency, GO also provides great support for concurrency and parallelism which is essential for a project like STAND.
+
 ![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
+
 The reason for using Next.js is its ability to provide a great user experience with its server-side rendering capabilities and its ability to provide a great developer experience with its hot reloading feature.
+
 ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+
 Currently, STAND supports NodeJS applications, but we plan to add support for more languages and frameworks in the future.
+
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+
 NPM is used to manage the dependencies of the node applications.
+
 ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)
 
 ## Contributing
