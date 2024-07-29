@@ -1,0 +1,6 @@
+[submodule "STAND-APP"]
+	path = STAND-APP
+	url = https://github.com/bitspaceorg/STAND-APP
+[submodule "STAND-FRONTEND-FOSSHACK"]
+	path = STAND-FRONTEND-FOSSHACK
+	url = https://github.com/bitspaceorg/STAND-FRONTEND-FOSSHACK.git
